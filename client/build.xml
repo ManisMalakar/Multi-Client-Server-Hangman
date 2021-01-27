@@ -1,0 +1,46 @@
+<project name="client" default="dist" basedir=".">
+<description> client </description>
+<!--  set global properties for this build  -->
+<property name="SOURCES" location="sources"/>
+<property name="CLASSES" location="classes"/>
+<property name="PACKAGES" location="packages"/>
+<target name="init">
+<!--  Create the time stamp  -->
+<tstamp/>
+<!--
+ Create the build directory structure used by compile
+-->
+<mkdir dir="${CLASSES}"/>
+<mkdir dir="${PACKAGES}"/>
+</target>
+<target name="compile" depends="init" description="compile the source">
+<!--  Compile the Java code from ${src} into ${build}  -->
+<javac srcdir="${SOURCES}" destdir="${CLASSES}" includeantruntime="false"/>
+</target>
+<target name="Client" depends="compile" description="run target">
+<java classpath="${CLASSES}" classname="client.Client" fork="false"/>
+</target>
+<target name="dist" depends="compile" description="generate the distribution">
+<!--  Create the distribution directory  -->
+<mkdir dir="${PACKAGES}/lib"/>
+<!--
+ Put everything in ${build} into the MyProject-${DSTAMP}.jar file
+-->
+<jar jarfile="${PACKAGES}/lib/client-${DSTAMP}.jar" basedir="${CLASSES}">
+<manifest>
+<attribute name="Built-By" value="Manish Malakar"/>
+<attribute name="Main-Class" value="client/Client"/>
+</manifest>
+</jar>
+</target>
+
+ <target name="run">
+        <java jar="${PACKAGES}/lib/client-${DSTAMP}.jar" fork="true"/>
+ </target>
+
+<target name="clean" description="clean up">
+<!--  Delete the ${build} and ${dist} directory trees  -->
+<delete dir="${CLASSES}"/>
+<delete dir="${PACKAGES}"/>
+</target>
+</project>
